@@ -16,4 +16,8 @@ class RAGPipeline:
     def answer(self, question: str) -> str:
         if not self.retriever.is_relevant(question):
             return "I can only answer questions about the resume."
-        return self.generator.generate(self.retriever.resume_text, question)
+
+        return self.generator.generate(
+            self.retriever.resume_text,
+            question
+        )

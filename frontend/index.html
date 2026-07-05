@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resume AI Assistant</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header class="app-header">
+    <div class="header-content">
+      <div class="logo-badge">
+        <!-- Minimal inline "document + spark" logo icon -->
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M15 2v5h5" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M8 13.5 9.4 11l1.4 2.5 1.6-3.5 1.6 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="header-text">
+        <h1>Resume AI Assistant</h1>
+        <p>AI-powered Resume Question Answering System</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= ALERTS ================= -->
+  <!-- A single alert banner, reused for both success and error states -->
+  <div id="alertBanner" class="alert hidden" role="status"></div>
+
+  <!-- ================= TABS ================= -->
+  <nav class="tabs">
+    <button class="tab-btn active" id="tabQA" data-tab="qa">Resume Q&amp;A</button>
+    <button class="tab-btn" id="tabMatch" data-tab="match">Job Matcher</button>
+  </nav>
+
+  <!-- ================= RESUME Q&A SECTION ================= -->
+  <main class="app-main" id="qaSection">
+
+    <!-- ---------- LEFT CARD: Upload Resume ---------- -->
+    <section class="card">
+      <div class="card-header">
+        <span class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 15V4M12 4 8 8m4-4 4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <h2>Upload Resume</h2>
+      </div>
+
+      <p class="card-subtitle">Upload a PDF resume to start asking questions about it.</p>
+
+      <label for="resumeFile" class="upload-dropzone" id="uploadDropzone">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3v12m0-12 4 4m-4-4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="dropzone-text">Click to choose a PDF file</span>
+        <span class="file-name" id="fileName">No file selected</span>
+      </label>
+      <input type="file" id="resumeFile" accept="application/pdf" hidden>
+
+      <button id="uploadBtn" class="btn btn-primary">
+        <span class="btn-label">Upload Resume</span>
+        <span class="btn-spinner hidden"></span>
+      </button>
+    </section>
+
+    <!-- ---------- RIGHT CARD: Ask a Question ---------- -->
+    <section class="card">
+      <div class="card-header">
+        <span class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 18h.01M9.5 9a2.5 2.5 0 1 1 3.4 2.3c-.9.35-1.4 1.1-1.4 2.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="12" r="9.25" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </span>
+        <h2>Ask a Question</h2>
+      </div>
+
+      <p class="card-subtitle">Ask anything about the uploaded resume.</p>
+
+      <div class="ask-row">
+        <input
+          type="text"
+          id="questionInput"
+          placeholder="e.g. What programming languages does the candidate know?"
+        >
+        <button id="askBtn" class="btn btn-primary">
+          <span class="btn-label">Ask</span>
+          <span class="btn-spinner hidden"></span>
+        </button>
+      </div>
+
+      <!-- Loading indicator shown while waiting for the model's answer -->
+      <div id="loadingIndicator" class="loading-indicator hidden">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="loading-text">Thinking...</span>
+      </div>
+
+      <!-- Answer message card -->
+      <div class="answer-box" id="answerBox">
+        <div class="answer-icon">AI</div>
+        <p id="answerText">Your answer will appear here once you ask a question.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= JOB MATCHER SECTION ================= -->
+  <main class="app-main hidden" id="matchSection">
+
+    <!-- ---------- LEFT CARD: Upload Resumes for Matching ---------- -->
+    <section class="card">
+      <div class="card-header">
+        <span class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 15V4M12 4 8 8m4-4 4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <h2>Upload Resumes</h2>
+      </div>
+
+      <p class="card-subtitle">Upload one or more PDF resumes to include them in the matching pool.</p>
+
+      <label for="matchResumeFiles" class="upload-dropzone" id="matchUploadDropzone">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3v12m0-12 4 4m-4-4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="dropzone-text">Click to choose PDF file(s)</span>
+        <span class="file-name" id="matchFileNames">No files selected</span>
+      </label>
+      <input type="file" id="matchResumeFiles" accept="application/pdf" multiple hidden>
+
+      <button id="matchUploadBtn" class="btn btn-primary">
+        <span class="btn-label">Upload Resumes</span>
+        <span class="btn-spinner hidden"></span>
+      </button>
+    </section>
+
+    <!-- ---------- RIGHT CARD: Job Matcher ---------- -->
+    <section class="card">
+      <div class="card-header">
+        <span class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 12.5 11 14.5 15.5 9.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="12" r="9.25" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </span>
+        <h2>Job Matcher</h2>
+      </div>
+
+      <p class="card-subtitle">Describe a job and find the best matching resume from the uploaded resumes.</p>
+
+      <textarea
+        id="jobDescriptionInput"
+        rows="4"
+        placeholder="e.g. Looking for a candidate with strong Python and data science skills..."
+      ></textarea>
+
+      <button id="matchBtn" class="btn btn-primary">
+        <span class="btn-label">Find Best Match</span>
+        <span class="btn-spinner hidden"></span>
+      </button>
+
+      <!-- Loading indicator shown while matching resumes -->
+      <div id="matchLoadingIndicator" class="loading-indicator hidden">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="loading-text">Matching...</span>
+      </div>
+
+      <!-- Match result card -->
+      <div class="answer-box" id="matchResultBox">
+        <div class="answer-icon">AI</div>
+        <div>
+          <p id="matchFilename" class="match-filename"></p>
+          <p id="matchText">The best matching resume will appear here.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="app-footer">
+    <p>Powered by Ollama + Qwen3 + FastAPI</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

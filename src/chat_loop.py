@@ -33,3 +33,5 @@ def chat(resume_path: str):
             break
         except Exception as e:
             print(f"Error: {e}\n")
+
+            
