@@ -156,6 +156,9 @@ async def upload_resume(file: UploadFile = File(..., description="A PDF resume f
     except PDFReadError as e:
         pipeline = None
         raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        pipeline = None
+        raise HTTPException(status_code=500, detail=f"Failed to index resume: {e}")
 
     return {"message": f"Resume '{file.filename}' uploaded and indexed successfully."}
 
