@@ -1,12 +1,12 @@
 from src.pdf_reader import extract_data_from_pdf
-from src.embeddings import TransformerEmbedder
+from src.embeddings import GeminiEmbedder
 from src.retriever import Retriever
 from src.generator import Generator
 
 
 class RAGPipeline:
     def __init__(self, resume_path: str):
-        self.embedder = TransformerEmbedder()
+        self.embedder = GeminiEmbedder()
         self.retriever = Retriever(self.embedder)
         self.generator = Generator()
 
