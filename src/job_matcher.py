@@ -1,12 +1,12 @@
 import os
 from src.pdf_reader import extract_data_from_pdf, PDFReadError
-from src.embeddings import GeminiEmbedder
+from src.embeddings import TransformerEmbedder
 from src.retriever import Retriever
 
 
 class JobMatcher:
     def __init__(self, resumes_folder: str):
-        self.embedder = GeminiEmbedder()
+        self.embedder = TransformerEmbedder()
         self.retrievers = {}
 
         for file in os.listdir(resumes_folder):

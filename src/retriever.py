@@ -1,5 +1,5 @@
 import numpy as np
-from src.embeddings import GeminiEmbedder
+from src.embeddings import TransformerEmbedder
 
 
 class RetrieverError(Exception):
@@ -7,7 +7,7 @@ class RetrieverError(Exception):
 
 
 class Retriever:
-    def __init__(self, embedder: GeminiEmbedder, threshold: float = 0.48):
+    def __init__(self, embedder: TransformerEmbedder, threshold: float = 0.2):
         self.embedder = embedder
         self.threshold = threshold
         self.resume_embedding = None
