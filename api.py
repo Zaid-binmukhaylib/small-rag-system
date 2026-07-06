@@ -70,7 +70,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-RESUME_DIR = "data/resumes"
+# Directory where uploaded resumes are stored. On hosts with a read-only
+# filesystem (e.g. Cloud Run), set RESUME_DIR to a writable path like /tmp/resumes.
+RESUME_DIR = os.environ.get("RESUME_DIR", "data/resumes")
 UPLOADED_RESUME_PATH = os.path.join(RESUME_DIR, "uploaded_resume.pdf")
 
 # Holds the pipeline built from the most recently uploaded resume.

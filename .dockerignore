@@ -1,0 +1,10 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+.git/
+.env
+resume_sys/
+resume_sys1/
+*.docx
+*.pdf
