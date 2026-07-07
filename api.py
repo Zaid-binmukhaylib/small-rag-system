@@ -2,6 +2,7 @@ import os
 
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from src.rag_pipeline import RAGPipeline
@@ -116,3 +117,8 @@ async def match_job(payload: JobDescription):
         "filename": best_file,
         "resume_text": matcher.retrievers[best_file].resume_text
     }
+
+
+# Serve the static frontend (index.html, style.css, script.js) from the same
+# origin as the API. Mounted last so the API routes above take precedence.
+app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")

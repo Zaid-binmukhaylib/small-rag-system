@@ -1,9 +1,10 @@
 // =========================================================
 // Configuration
 // =========================================================
-// Base URL of the FastAPI backend. Update this if the backend
-// runs on a different host/port than the default.
-const API_BASE_URL = "http://localhost:8000";
+// Base URL of the FastAPI backend. Empty means "same origin" — the frontend
+// is served by the backend, so requests go to the same host (works locally
+// and through a public tunnel).
+const API_BASE_URL = "";
 
 // =========================================================
 // Element references
