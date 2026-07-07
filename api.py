@@ -26,8 +26,14 @@ UPLOADED_RESUME_PATH = os.path.join(RESUME_DIR, "uploaded_resume.pdf")
 pipeline: RAGPipeline | None = None
 
 
+class Message(BaseModel):
+    role: str
+    content: str
+
+
 class Question(BaseModel):
     question: str
+    history: list[Message] = []
 
 
 class JobDescription(BaseModel):
@@ -64,7 +70,8 @@ async def ask_question(payload: Question):
         raise HTTPException(status_code=400, detail="Question cannot be empty.")
 
     try:
-        answer = pipeline.answer(payload.question)
+        history = [{"role": m.role, "content": m.content} for m in payload.history]
+        answer = pipeline.answer(payload.question, history)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

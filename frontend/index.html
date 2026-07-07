@@ -81,18 +81,11 @@
         <h2>Ask a Question</h2>
       </div>
 
-      <p class="card-subtitle">Ask anything about the uploaded resume.</p>
+      <p class="card-subtitle">Have a continuous conversation about the uploaded resume.</p>
 
-      <div class="ask-row">
-        <input
-          type="text"
-          id="questionInput"
-          placeholder="e.g. What programming languages does the candidate know?"
-        >
-        <button id="askBtn" class="btn btn-primary">
-          <span class="btn-label">Ask</span>
-          <span class="btn-spinner hidden"></span>
-        </button>
+      <!-- Chat conversation area (cleared on page refresh) -->
+      <div class="chat-window" id="chatWindow">
+        <div class="chat-empty" id="chatEmpty">Your conversation will appear here.</div>
       </div>
 
       <!-- Loading indicator shown while waiting for the model's answer -->
@@ -103,10 +96,16 @@
         <span class="loading-text">Thinking...</span>
       </div>
 
-      <!-- Answer message card -->
-      <div class="answer-box" id="answerBox">
-        <div class="answer-icon">AI</div>
-        <p id="answerText">Your answer will appear here once you ask a question.</p>
+      <div class="ask-row">
+        <input
+          type="text"
+          id="questionInput"
+          placeholder="e.g. What programming languages does the candidate know?"
+        >
+        <button id="askBtn" class="btn btn-primary">
+          <span class="btn-label">Send</span>
+          <span class="btn-spinner hidden"></span>
+        </button>
       </div>
     </section>
 

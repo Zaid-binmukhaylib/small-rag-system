@@ -13,11 +13,14 @@ class RAGPipeline:
         resume_text = extract_data_from_pdf(resume_path)
         self.retriever.index(resume_text)
 
-    def answer(self, question: str) -> str:
-        if not self.retriever.is_relevant(question):
+    def answer(self, question: str, history: list | None = None) -> str:
+        # Only filter the first question. Follow-up questions rely on the
+        # conversation context, so we let them through.
+        if not history and not self.retriever.is_relevant(question):
             return "I can only answer questions about the resume."
 
         return self.generator.generate(
             self.retriever.resume_text,
-            question
+            question,
+            history
         )

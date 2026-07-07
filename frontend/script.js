@@ -17,7 +17,11 @@ const uploadBtn = document.getElementById("uploadBtn");
 const questionInput = document.getElementById("questionInput");
 const askBtn = document.getElementById("askBtn");
 const loadingIndicator = document.getElementById("loadingIndicator");
-const answerText = document.getElementById("answerText");
+const chatWindow = document.getElementById("chatWindow");
+const chatEmpty = document.getElementById("chatEmpty");
+
+// In-memory conversation history. Lives only in the page — a refresh clears it.
+const conversationHistory = [];
 
 const alertBanner = document.getElementById("alertBanner");
 
@@ -125,8 +129,30 @@ uploadBtn.addEventListener("click", async () => {
 });
 
 // =========================================================
-// Ask a Question
+// Ask a Question (continuous chat)
 // =========================================================
+
+// Append a chat bubble to the conversation window and scroll to it.
+function addChatMessage(role, text) {
+  if (chatEmpty) chatEmpty.classList.add("hidden");
+
+  const bubble = document.createElement("div");
+  bubble.className = `chat-message ${role}`;
+
+  const avatar = document.createElement("div");
+  avatar.className = "chat-avatar";
+  avatar.textContent = role === "user" ? "You" : "AI";
+
+  const text_el = document.createElement("p");
+  text_el.className = "chat-text";
+  text_el.textContent = text;
+
+  bubble.appendChild(avatar);
+  bubble.appendChild(text_el);
+  chatWindow.appendChild(bubble);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+  return text_el;
+}
 
 async function askQuestion() {
   const question = questionInput.value.trim();
@@ -135,6 +161,10 @@ async function askQuestion() {
     showAlert("Please type a question first.", "error");
     return;
   }
+
+  // Show the user's message immediately and clear the input.
+  addChatMessage("user", question);
+  questionInput.value = "";
 
   setButtonLoading(askBtn, true);
   loadingIndicator.classList.remove("hidden");
@@ -145,7 +175,8 @@ async function askQuestion() {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ question })
+      // Send the prior conversation so the model remembers the context.
+      body: JSON.stringify({ question, history: conversationHistory })
     });
 
     if (!response.ok) {
@@ -153,10 +184,14 @@ async function askQuestion() {
     }
 
     const data = await response.json();
-    answerText.textContent = data.answer;
+    addChatMessage("assistant", data.answer);
+
+    // Remember this turn for the next question.
+    conversationHistory.push({ role: "user", content: question });
+    conversationHistory.push({ role: "assistant", content: data.answer });
   } catch (error) {
     showAlert("Failed to get an answer. Please try again.", "error");
-    answerText.textContent = "Something went wrong while fetching the answer.";
+    addChatMessage("assistant", "Something went wrong while fetching the answer.");
   } finally {
     setButtonLoading(askBtn, false);
     loadingIndicator.classList.add("hidden");

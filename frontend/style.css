@@ -387,6 +387,81 @@ body {
 }
 
 /* =========================================================
+   Chat window (continuous conversation)
+   ========================================================= */
+.chat-window {
+  margin-top: 16px;
+  padding: 14px;
+  height: 320px;
+  overflow-y: auto;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chat-empty {
+  margin: auto;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.chat-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 85%;
+}
+
+.chat-message.user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.chat-avatar {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-message.assistant .chat-avatar {
+  background-color: var(--color-blue);
+}
+
+.chat-message.user .chat-avatar {
+  background-color: var(--color-text-muted);
+}
+
+.chat-text {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.chat-message.assistant .chat-text {
+  background-color: var(--color-blue-light);
+  border: 1px solid #d7e4ff;
+  color: var(--color-text);
+}
+
+.chat-message.user .chat-text {
+  background-color: var(--color-blue);
+  color: #ffffff;
+}
+
+/* =========================================================
    Answer box
    ========================================================= */
 .answer-box {
